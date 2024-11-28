@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<main>
+  <section class="container my-5 px-4">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center my-4">
+      Создайте короткую ссылку автоматически или предложите свой вариант
+    </p>
+
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+          <form method="POST" novalidate>
+            {{ form.csrf_token }}
+            <div>
+              <div>
+                {{ form.original_link(class="form-control form-control-lg py-3 mb-3", placeholder="Длинная ссылка") }}<br />
+                {% if form.original_link.errors %}
+                  <p class="text-danger">
+                    {% for error in form.original_link.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+                <p><span style="color:red">Текст возможной ошибки</span></p>
+              </div>
+              <div>
+                {{ form.custom_id(class="form-control form-control-lg py-3 mb-3", placeholder="Ваш вариант короткой ссылки") }}<br />
+                {% if form.custom_id.errors %}
+                  <p class="text-danger">
+                    {% for error in form.custom_id.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+                <p><span style="color:red">Текст возможной ошибки</span></p>
+              </div>
+
+              <input type="submit" class="btn btn-primary" value="Создать">
+            </div>
+          </form>
+          {% if short %}
+            <h5 class="text-center mt-4">Ваша новая ссылка готова:</h5>
+            <p class="text-center">
+              <a href="{{ url_for('redirect_to_original', short_id=short, _external=True) }}" target="_blank">{{ url_for('redirect_to_original', short_id=short, _external=True) }}</a>
+            </p>
+          {% endif %}
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row ">
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+          <p class="text-center">
+          <h5 class="text-center">Пример информационного сообщения</h5>
+          </p>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+{% endblock %}
