@@ -7,7 +7,12 @@ from marshmallow import (
     validates,
 )
 
-from settings import API_ERROR_MESSAGE
+from settings import (
+    API_ERROR_MESSAGE,
+    MAX_LENGTH_FOR_CUSTOM_SHORT,
+    MIN_LENGTH_FOR_CUSTOM_SHORT,
+    PATTERN_FOR_CUSTOM_SHORT
+)
 from yacut.exceptions import InvalidAPIUsage
 from yacut.utils import get_unique_short_id
 from yacut.validators import api_unique_link_validator
@@ -46,11 +51,12 @@ class URLMapSChema(GetOriginalURLSchema):
         required=False,
         validate=[
             validate.Length(
-                max=16,
+                min=MIN_LENGTH_FOR_CUSTOM_SHORT,
+                max=MAX_LENGTH_FOR_CUSTOM_SHORT,
                 error=API_ERROR_MESSAGE['invalid_short_name']
             ),
             validate.Regexp(
-                '^[A-Za-z0-9]*$',
+                PATTERN_FOR_CUSTOM_SHORT,
                 error=API_ERROR_MESSAGE['invalid_short_name']
             )
         ]

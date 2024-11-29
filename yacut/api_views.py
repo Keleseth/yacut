@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import jsonify, request
 from marshmallow import ValidationError
 
@@ -22,19 +24,21 @@ def api_short_link():
     try:
         validated_data = schema.load(data)
     except ValidationError as error:
-        return jsonify(error.messages), 400
+        return jsonify(error.messages), HTTPStatus.BAD_REQUEST
     urlmap_obj = URLMap(**validated_data)
     db.session.add(urlmap_obj)
     db.session.commit()
     serialized_object = schema.dump(urlmap_obj)
-    return jsonify(serialized_object), 201
+    return jsonify(serialized_object), HTTPStatus.CREATED
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_full_link(short_id):
     original_link = URLMap.query.filter_by(short=short_id).first()
     if not original_link:
-        raise InvalidAPIUsage(API_ERROR_MESSAGE['object_is_missing'], 404)
+        raise InvalidAPIUsage(
+            API_ERROR_MESSAGE['object_is_missing'], HTTPStatus.NOT_FOUND
+        )
     schema = GetOriginalURLSchema()
     serializer_object = schema.dump(original_link)
-    return jsonify(serializer_object), 200
+    return jsonify(serializer_object), HTTPStatus.OK

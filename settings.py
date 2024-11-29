@@ -22,8 +22,16 @@ API_ERROR_MESSAGE = {
 }
 
 FRONT_ERROR_MESSAGE = {
+    'invalid_short_name': 'Указано недопустимое имя для короткой ссылки',
     'invalid_url': 'Неверный формат длинной ссылки. Введие ссылку целиком.',
     'missing_url': 'Заполните поле длинной ссылки.'
 }
 
+# Допустимые символы для генерации короткой ссылки.
 ALLOWED_CHARS_FOR_SHORT_LINK = string.ascii_letters + string.digits
+# Регулярное выражение для валидации пользовательской короткой ссылки.
+PATTERN_FOR_CUSTOM_SHORT = f'^[{ALLOWED_CHARS_FOR_SHORT_LINK}]*$'
+
+# Допустимая длина пользовательской короткой ссылки
+MAX_LENGTH_FOR_CUSTOM_SHORT = 16
+MIN_LENGTH_FOR_CUSTOM_SHORT = 0
