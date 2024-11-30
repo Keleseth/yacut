@@ -3,27 +3,32 @@ from flask import (
     redirect
 )
 
-from . import app, db
+from . import app
+from yacut.exceptions import ShortLinkAlreadyExists
 from yacut.forms import LinkKnitForm
 from yacut.models import URLMap
-from yacut.utils import link_links
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index_view():
     form = LinkKnitForm()
     if form.validate_on_submit():
-        original = form.original_link.data
-        short = form.custom_id.data
-        urlmap_obj, short = link_links(
-            URLMap, original, short
-        )
-        db.session.add(urlmap_obj)
-        db.session.commit()
+        data_for_model = {
+            'original': form.original_link.data,
+            'short': form.custom_id.data
+        }
+        try:
+            urlmap_object = URLMap.link_object_create(data_for_model)
+        except ShortLinkAlreadyExists as error:
+            form.custom_id.errors.append(error.message)
+            return render_template(
+                'index.html',
+                form=form
+            )
         return render_template(
             'index.html',
             form=form,
-            short=short
+            short=urlmap_object.short
         )
     return render_template('index.html', form=form)
 

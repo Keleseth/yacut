@@ -1,6 +1,7 @@
 from flask import jsonify, render_template
 
 from . import app, db
+from .exceptions import ShortLinkAlreadyExists
 from yacut.exceptions import InvalidAPIUsage
 
 
@@ -17,4 +18,9 @@ def internal_error(error):
 
 @app.errorhandler(InvalidAPIUsage)
 def invalid_api_usage(error):
+    return jsonify(error.to_dict()), error.status_code
+
+
+@app.errorhandler(ShortLinkAlreadyExists)
+def short_link_exists(error):
     return jsonify(error.to_dict()), error.status_code

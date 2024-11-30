@@ -18,7 +18,6 @@ from settings import (
     MIN_LENGTH_FOR_CUSTOM_SHORT,
     PATTERN_FOR_CUSTOM_SHORT
 )
-from yacut.validators import form_unique_link_validator
 
 
 class LinkKnitForm(FlaskForm):
@@ -41,7 +40,6 @@ class LinkKnitForm(FlaskForm):
                 message=FRONT_ERROR_MESSAGE['invalid_short_name']
             ),
             Optional(),
-            form_unique_link_validator  # не уверен, стоило ли добавлять.
         ]
     )
     submit = SubmitField('Добавить')

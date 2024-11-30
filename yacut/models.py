@@ -1,14 +1,14 @@
 from datetime import datetime
 import secrets
 
-from flask import url_for
+from sqlalchemy import exists
 
 from . import db
 from settings import (
     ALLOWED_CHARS_FOR_SHORT_LINK,
-    JSON_POST_FIELDS,
     SHORT_LINK_LENGTH
 )
+from yacut.exceptions import ShortLinkAlreadyExists
 
 
 class URLMap(db.Model):
@@ -33,32 +33,41 @@ class URLMap(db.Model):
         default=datetime.utcnow
     )
 
-    def to_dict(self):
-        return dict(
-            url=self.original,
-            short_link=url_for(
-                'redirect_to_original', short_id=self.short, _external=True
-            )
+    @staticmethod
+    def get_link_object(short_id):
+        return URLMap.query.filter_by(short=short_id).first()
+
+    @staticmethod
+    def check_link_exists(short_id):
+        return db.session.query(
+            exists().where(URLMap.short == short_id)
+        ).scalar()
+
+    @staticmethod
+    def link_links(data):
+        if not data['short']:
+            data['short'] = URLMap.get_unique_short_id()
+        return URLMap(
+            original=data['original'],
+            short=data['short']
         )
 
-    def from_dict(self, data):
-        for field in JSON_POST_FIELDS:
-            if field in data:
-                setattr(self, field, data[field])
-
-    def link_links(self, model, original, short):
-        if not short:
-            short = self.get_unique_short_id()
-        return model(
-            original=original,
-            short=short
-        ), short
-
-    def get_unique_short_id(self):
+    @staticmethod
+    def get_unique_short_id():
         while True:
             short_id = ''.join(
                 secrets.choice(ALLOWED_CHARS_FOR_SHORT_LINK)
                 for _ in range(SHORT_LINK_LENGTH)
             )
-            if not URLMap.query.filter_by(short=short_id).first():
+            if not URLMap.check_link_exists(short_id):
                 return short_id
+
+    @staticmethod
+    def link_object_create(data=None):
+        if URLMap.check_link_exists(data['short']):
+            raise ShortLinkAlreadyExists()
+
+        new_link_obj = URLMap.link_links(data)
+        db.session.add(new_link_obj)
+        db.session.commit()
+        return new_link_obj

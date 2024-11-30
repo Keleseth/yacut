@@ -4,7 +4,6 @@ from marshmallow import (
     post_load,
     Schema,
     validate,
-    validates,
 )
 
 from settings import (
@@ -15,7 +14,6 @@ from settings import (
 )
 from yacut.exceptions import InvalidAPIUsage
 from yacut.utils import get_unique_short_id
-from yacut.validators import api_unique_link_validator
 
 
 class GetOriginalURLSchema(Schema):
@@ -61,10 +59,6 @@ class URLMapSChema(GetOriginalURLSchema):
             )
         ]
     )
-
-    @validates('short')
-    def validate_short_is_unique(self, value):
-        api_unique_link_validator(value)
 
     @post_load
     def if_not_short_generate(self, data, **kwargs):
