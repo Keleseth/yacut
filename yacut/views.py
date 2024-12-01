@@ -4,6 +4,10 @@ from flask import (
 )
 
 from . import app
+from settings import (
+    ORIGINAL_LINK_FIELD,
+    SHORT_LINK_FIELD
+)
 from yacut.exceptions import ShortLinkAlreadyExists
 from yacut.forms import LinkKnitForm
 from yacut.models import URLMap
@@ -14,8 +18,8 @@ def index_view():
     form = LinkKnitForm()
     if form.validate_on_submit():
         data_for_model = {
-            'original': form.original_link.data,
-            'short': form.custom_id.data
+            ORIGINAL_LINK_FIELD: form.original_link.data,
+            SHORT_LINK_FIELD: form.custom_id.data
         }
         try:
             urlmap_object = URLMap.link_object_create(data_for_model)

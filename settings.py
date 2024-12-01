@@ -33,9 +33,17 @@ ALLOWED_CHARS_FOR_SHORT_LINK = string.ascii_letters + string.digits
 # Регулярное выражение для валидации пользовательской короткой ссылки.
 PATTERN_FOR_CUSTOM_SHORT = f'^[{ALLOWED_CHARS_FOR_SHORT_LINK}]*$'
 
+# допустимая длина для длинной(оригинальной) ссылки
+MAX_LENGTH_FOR_ORIGINAL_LINK = 2048
+
 # Допустимая длина пользовательской короткой ссылки
 MAX_LENGTH_FOR_CUSTOM_SHORT = 16
 MIN_LENGTH_FOR_CUSTOM_SHORT = 0
 
 # Длина генерируемой сервером короткой ссылки
 SHORT_LINK_LENGTH = 6
+
+# Наименования полей для сериализатора, модели и
+# словаря data_for_model для views веб-интерфейса.
+SHORT_LINK_FIELD = 'short'
+ORIGINAL_LINK_FIELD = 'original'

@@ -1,7 +1,6 @@
 from flask import request
 from marshmallow import (
     fields,
-    post_load,
     Schema,
     validate,
 )
@@ -13,7 +12,6 @@ from settings import (
     PATTERN_FOR_CUSTOM_SHORT
 )
 from yacut.exceptions import InvalidAPIUsage
-from yacut.utils import get_unique_short_id
 
 
 class GetOriginalURLSchema(Schema):
@@ -59,12 +57,6 @@ class URLMapSChema(GetOriginalURLSchema):
             )
         ]
     )
-
-    @post_load
-    def if_not_short_generate(self, data, **kwargs):
-        if not data.get('short'):
-            data['short'] = get_unique_short_id()
-        return data
 
     short_link = fields.Method("get_short_link")
 

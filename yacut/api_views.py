@@ -6,7 +6,10 @@ from . import app
 from settings import (
     API_ERROR_MESSAGE
 )
-from yacut.exceptions import InvalidAPIUsage
+from yacut.exceptions import (
+    InvalidAPIUsage,
+    ShortLinkAlreadyExists
+)
 from yacut.models import URLMap
 from yacut.serializers import (
     GetOriginalURLSchema,
@@ -21,7 +24,10 @@ def api_short_link():
     data = request.get_json()
     schema = URLMapSChema()
     validated_data = schema.load(data)
-    urlmap_obj = URLMap.link_object_create(validated_data)
+    try:
+        urlmap_obj = URLMap.link_object_create(validated_data)
+    except ShortLinkAlreadyExists as error:
+        raise error
     serialized_object = schema.dump(urlmap_obj)
     return jsonify(serialized_object), HTTPStatus.CREATED
 
