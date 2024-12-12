@@ -1,5 +1,7 @@
 # YaCut - Сервис для создания коротких ссылок
 
+![Flask](https://img.shields.io/badge/flask-%23000000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Alembic](https://img.shields.io/badge/alembic-%230071C5.svg?style=for-the-badge&logo=alembic&logoColor=white) ![Jinja2](https://img.shields.io/badge/jinja2-%23B41717.svg?style=for-the-badge&logo=jinja&logoColor=white) ![Marshmallow](https://img.shields.io/badge/marshmallow-%2300A1E0.svg?style=for-the-badge&logo=python&logoColor=white) ![SQLAlchemy](https://img.shields.io/badge/sqlalchemy-%23F47216.svg?style=for-the-badge&logo=python&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
 ## Описание
 YaCut — это сервис для сокращения URL, позволяющий создать короткую версию ссылки, которой легко делиться с другими. Проект реализован на Python с использованием Flask и поддерживает как API, так и веб-интерфейс.
 
